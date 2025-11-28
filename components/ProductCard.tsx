@@ -47,14 +47,28 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.4, delay: index * 0.05 }}
-      whileHover={{ y: -4 }}
+      initial={{ opacity: 0, y: 30, scale: 0.9 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-50px" }}
+      transition={{ 
+        duration: 0.5, 
+        delay: index * 0.05,
+        type: "spring",
+        stiffness: 100
+      }}
+      whileHover={{ 
+        y: -8, 
+        scale: 1.02,
+        transition: { duration: 0.3 }
+      }}
       className="h-full"
     >
-      <div className="h-full flex flex-col glass rounded-xl overflow-hidden hover:border-[#00c853]/40 transition-all duration-300 group bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8 relative border border-gray-200 dark:border-white/10">
+      <motion.div 
+        whileHover={{ 
+          boxShadow: "0 10px 40px rgba(0, 200, 83, 0.2)",
+        }}
+        className="h-full flex flex-col glass rounded-xl overflow-hidden hover:border-[#00c853]/40 transition-all duration-300 group bg-white dark:bg-white/5 hover:bg-gray-50 dark:hover:bg-white/8 relative border border-gray-200 dark:border-white/10"
+      >
         {/* Image Container */}
         <div className="relative aspect-square w-full overflow-hidden bg-gray-100 dark:bg-white/5">
           <Link 
@@ -99,25 +113,55 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           {/* Badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2 z-10">
             {product.badge && (
-              <div className={`px-2.5 py-1 rounded-md text-xs font-bold shadow-lg ${
-                product.badge.includes("%") || product.badge.includes("-")
-                  ? "bg-[#00c853] text-black"
-                  : product.badge === "New"
-                  ? "bg-[#ffd600] text-black"
-                  : "bg-red-500 text-white"
-              }`}>
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 200,
+                  delay: index * 0.05 + 0.3
+                }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className={`px-2.5 py-1 rounded-md text-xs font-bold shadow-lg ${
+                  product.badge.includes("%") || product.badge.includes("-")
+                    ? "bg-[#00c853] text-black"
+                    : product.badge === "New"
+                    ? "bg-[#ffd600] text-black"
+                    : "bg-red-500 text-white"
+                }`}
+              >
                 {product.badge}
-              </div>
+              </motion.div>
             )}
             {product.isNew && !product.badge && (
-              <div className="bg-[#ffd600] text-black px-2.5 py-1 rounded-md text-xs font-bold shadow-lg">
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 200,
+                  delay: index * 0.05 + 0.3
+                }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className="bg-[#ffd600] text-black px-2.5 py-1 rounded-md text-xs font-bold shadow-lg"
+              >
                 New
-              </div>
+              </motion.div>
             )}
             {product.isOnSale && !product.badge && product.discount && (
-              <div className="bg-[#00c853] text-black px-2.5 py-1 rounded-md text-xs font-bold shadow-lg">
+              <motion.div
+                initial={{ scale: 0, rotate: -180 }}
+                animate={{ scale: 1, rotate: 0 }}
+                transition={{ 
+                  type: "spring", 
+                  stiffness: 200,
+                  delay: index * 0.05 + 0.3
+                }}
+                whileHover={{ scale: 1.1, rotate: 5 }}
+                className="bg-[#00c853] text-black px-2.5 py-1 rounded-md text-xs font-bold shadow-lg"
+              >
                 -{product.discount}%
-              </div>
+              </motion.div>
             )}
           </div>
 
@@ -195,17 +239,35 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
           </div>
 
           {/* Add to Cart Button */}
-          <Button
-            onClick={handleAddToCart}
-            disabled={!product.inStock}
-            className="w-full mt-auto text-sm font-medium"
-            size="sm"
+          <motion.div
+            whileHover={{ scale: 1.02 }}
+            whileTap={{ scale: 0.98 }}
           >
-            <ShoppingCart className="h-4 w-4 mr-2" />
-            Add to Cart
-          </Button>
+            <Button
+              onClick={handleAddToCart}
+              disabled={!product.inStock}
+              className="w-full mt-auto text-sm font-medium relative overflow-hidden group"
+              size="sm"
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-[#00e85c] to-[#00c853] opacity-0 group-hover:opacity-100 transition-opacity"
+                initial={{ x: "-100%" }}
+                whileHover={{ x: "100%" }}
+                transition={{ duration: 0.5 }}
+              />
+              <span className="relative z-10 flex items-center justify-center">
+                <motion.div
+                  animate={{ rotate: [0, 10, -10, 0] }}
+                  transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                >
+                  <ShoppingCart className="h-4 w-4 mr-2" />
+                </motion.div>
+                Add to Cart
+              </span>
+            </Button>
+          </motion.div>
         </div>
-      </div>
+      </motion.div>
     </motion.div>
   );
 }
